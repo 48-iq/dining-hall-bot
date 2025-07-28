@@ -1,0 +1,17 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: dining-hall-bot
+  datasource:
+    url: ${POSTGRES_DB_URL:jdbc:postgresql://localhost:5432/postgres}
+    username: ${POSTGRES_DB_USER:postgres}
+    password: ${POSGRES_DB_PASSWORD:postgres}
+  jpa:
+    hibernate:
+      ddl-auto: update
+app:
+  bot: 
+    token: ${BOT_TOKEN:default}
+    username: ${BOT_USERNAME:default}
+    threads: ${BOT_THREADS:10}

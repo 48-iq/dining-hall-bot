@@ -1,0 +1,25 @@
+<texts 
+  xmlns="http://dev.ivanov/dining-hall-bot"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://dev.ivanov/dining-hall-bot texts.xsd"
+>
+
+<text key="start">
+Это стартовой сообщение
+</text>
+
+<text key="default">
+Извините я не понял
+</text>
+
+<text key="help">
+Это бот для просмотра меню в столовой
+доступные команды:
+- /help - помощь
+- /menu - меню
+- /start - старт
+- /feedback - обратная связь
+
+</text>
+
+</texts>
