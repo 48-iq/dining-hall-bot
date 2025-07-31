@@ -27,7 +27,7 @@ public class Review {
 
   private String text;
 
-  private String usrename;
+  private String username;
 
   private LocalDate date;
 }

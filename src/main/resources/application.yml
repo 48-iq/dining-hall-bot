@@ -18,6 +18,7 @@ app:
     username: ${BOT_USERNAME:default}
     threads: ${BOT_THREADS:10}
     adminChatId: -4892022111
+    reviewsPageSize: 3
 logging:
   level:
     root: INFO

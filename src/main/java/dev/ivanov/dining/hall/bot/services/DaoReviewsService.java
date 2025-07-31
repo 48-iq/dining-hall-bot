@@ -1,28 +1,83 @@
 package dev.ivanov.dining.hall.bot.services;
 
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import dev.ivanov.dining.hall.bot.dto.ReviewsPageDto;
+import dev.ivanov.dining.hall.bot.entities.Review;
+import dev.ivanov.dining.hall.bot.repositories.ReviewRepository;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class DaoReviewsService implements ReviewService {
 
+  private static final Logger logger = LoggerFactory.getLogger(DaoReviewsService.class);
+
+  private final ReviewRepository reviewRepository;
+
+  private final TextService textService;
+
+  @Value("${app.bot.reviewsPageSize}")
+  private Integer pageSize;
+
   @Override
+  @Transactional
   public void addReview(String review, String username) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'addReview'");
+    logger.info("addReview - review: {} - username: {}", review, username);
+    Review entity = Review.builder()
+      .text(review)
+      .username(username)
+      .build();
+    reviewRepository.save(entity);
   }
 
   @Override
-  public String clearReviews() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'clearReviews'");
+  @Transactional
+  public void clearReviews() {
+    logger.info("clear all reviews");
+    reviewRepository.deleteAll();
   }
 
   @Override
+  @Transactional
   public ReviewsPageDto getReviews(Integer page) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'getReviews'");
+    logger.info("getReviews - page: {}", page);
+    PageRequest pageRequest = PageRequest.of(page, pageSize);
+    Page<Review> reviewsPage = reviewRepository.findAll(pageRequest);
+    Integer totalPages = reviewsPage.getTotalPages();
+
+    List<Review> reviews = reviewsPage.getContent();
+
+    if (reviewsPage.isEmpty()) return ReviewsPageDto
+      .builder()
+      .text(textService.getText("emptyReviews"))
+      .totalPages(totalPages)
+      .build();
+
+    StringBuilder textBuilder = new StringBuilder();
+    textBuilder
+      .append("<b>--" + page + "--</b>\n\n");
+
+    for (Review review : reviews) {
+      textBuilder
+        .append("*\n")
+        .append("<b>" + review.getUsername() + "</b>\n")
+        .append(review.getText() + "\n\n");
+    }
+
+    return ReviewsPageDto
+      .builder()
+      .text(textBuilder.toString())
+      .totalPages(totalPages)
+      .build();
   }
   
 }

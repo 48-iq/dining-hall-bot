@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ReviewsPageDto {
   private String text;
-  private Integer pageCount;
+  private Integer totalPages;
 }

@@ -1,13 +1,11 @@
 package dev.ivanov.dining.hall.bot.entities;
 
-import java.sql.Blob;
 
 import dev.ivanov.dining.hall.bot.states.BotStates;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
