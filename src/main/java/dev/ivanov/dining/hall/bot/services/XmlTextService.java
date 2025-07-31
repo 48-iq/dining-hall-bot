@@ -48,6 +48,10 @@ public class XmlTextService implements TextService {
   @Override
   public String getText(String key) {
     logger.trace("getText({})", key);
-    return texts.get(key);
+    String text = texts.get(key);
+    if (text == null) {
+      throw new IllegalArgumentException("Text with key " + key + " not found");
+    }
+    return text;
   }
 }

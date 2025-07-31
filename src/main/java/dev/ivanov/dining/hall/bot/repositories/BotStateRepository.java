@@ -6,6 +6,5 @@ import org.springframework.stereotype.Repository;
 import dev.ivanov.dining.hall.bot.entities.BotState;
 
 @Repository
-public interface BotStateRepository extends JpaRepository<BotState, String> {
-  
+public interface BotStateRepository extends JpaRepository<BotState, Long> {
 }

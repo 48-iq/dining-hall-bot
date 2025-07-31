@@ -5,7 +5,7 @@
 >
 
 <text key="start">
-Это стартовой сообщение
+Привет я бот для просмотра меню в столовой
 </text>
 
 <text key="default">
@@ -13,13 +13,65 @@
 </text>
 
 <text key="help">
-Это бот для просмотра меню в столовой
-доступные команды:
-- /help - помощь
-- /menu - меню
-- /start - старт
-- /feedback - обратная связь
+Это бот для просмотра меню в столовой.
+список команд:
+/start - начать общение сначала
+/help - помощь
+/admin - панель администратора
+</text>
 
+<text key="mainMenu">
+Выберите опцию
+</text>
+
+<text key="adminMenu">
+Это панель администратора,
+здесь можно загрузить новое меню и скачать все отзывы в формате excel
+</text>
+
+<text key="adminNotAllowed">
+Вы не являетесь администратором
+</text>
+
+<text key="uploadMenu">
+Загрузите файл меню в формате .xlsx
+</text>
+
+<!-- BUTTONS -->
+<text key="reviewsButton">
+Посмотреть отзывы
+</text>
+
+<text key="todayMenuButton">
+Меню на сегодня
+</text>
+
+<text key="tomorrowMenuButton">
+Меню на завтра
+</text>
+
+<text key="weekMenuButton">
+Меню на неделю
+</text>
+
+<text key="startButton">
+Начать
+</text>
+
+<text key="downloadReviewsButton">
+Скачать отзывы в excel
+</text>
+
+<text key="uploadMenuButton">
+Загрузить новое меню
+</text>
+
+<text key="uploadMenuError">
+Не удалось загрузить меню
+</text>
+
+<text key="uploadMenuSuccess">
+Меню успешно загружено
 </text>
 
 </texts>

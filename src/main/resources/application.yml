@@ -10,8 +10,15 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+  main:
+    web-application-type: none
 app:
   bot: 
     token: ${BOT_TOKEN:default}
     username: ${BOT_USERNAME:default}
     threads: ${BOT_THREADS:10}
+    adminChatId: -4892022111
+logging:
+  level:
+    root: INFO
+    dev.ivanov: TRACE
