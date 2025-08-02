@@ -1,5 +1,7 @@
 package dev.ivanov.dining.hall.bot.services;
 
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -20,9 +22,11 @@ public class DaoStateService implements StateService {
 
   @Override
   public BotStates getState(Long chatId) {
-    return botStateRepository.findById(chatId)
-      .orElseThrow(() -> new IllegalStateException("BotState not found for chatId: " + chatId))
-      .getState();
+    Optional<BotState> botState = botStateRepository.findById(chatId);
+    if (botState.isPresent()) {
+      return botState.get().getState();
+    }
+    return BotStates.START;
   }
 
   @Override
@@ -33,7 +37,6 @@ public class DaoStateService implements StateService {
         BotState.builder()
           .chatId(chatId)
           .state(BotStates.MAIN_MENU)
-          .reviewPage(0)
         .build()
       );
     logger.info("setState for chat: {} - state: {}", chatId, state);
@@ -47,27 +50,7 @@ public class DaoStateService implements StateService {
     BotState botState = botStateRepository.findById(chatId)
       .orElseThrow(() -> new IllegalArgumentException("BotState not found for chatId: " + chatId));
     botState.setState(BotStates.MAIN_MENU);
-    botState.setReviewPage(0);
     botStateRepository.save(botState);
     logger.info("resetState for chat: {}", chatId);
-    
-    
   }
-
-  @Override
-  public Integer getReviewPage(Long chatId) {
-    return botStateRepository.findById(chatId)
-    .orElseThrow(() -> new IllegalArgumentException("BotState not found for chatId: " + chatId))
-    .getReviewPage();
-  }
-
-  @Override
-  @Transactional
-  public void setReviewPage(Long chatId, Integer reviewPage) {
-    BotState botState = botStateRepository.findById(chatId)
-    .orElseThrow(() -> new IllegalArgumentException("BotState not found for chatId: " + chatId));
-    botState.setReviewPage(reviewPage);
-    botStateRepository.save(botState);
-  }
-  
 }

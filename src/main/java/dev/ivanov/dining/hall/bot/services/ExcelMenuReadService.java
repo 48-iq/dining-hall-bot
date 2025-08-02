@@ -5,6 +5,6 @@ import java.util.List;
 
 import dev.ivanov.dining.hall.bot.entities.MenuRow;
 
-public interface XcelMenuReadService {
+public interface ExcelMenuReadService {
   public List<MenuRow> readMenu(InputStream file);
 }

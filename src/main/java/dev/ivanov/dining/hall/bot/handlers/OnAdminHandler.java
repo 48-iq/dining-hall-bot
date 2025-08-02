@@ -16,7 +16,7 @@ import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMember;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import dev.ivanov.dining.hall.bot.bots.AppBot;
+import dev.ivanov.dining.hall.bot.bots.BotContainer;
 import dev.ivanov.dining.hall.bot.services.HandlerUtils;
 import dev.ivanov.dining.hall.bot.services.StateService;
 import dev.ivanov.dining.hall.bot.services.TextService;
@@ -31,16 +31,17 @@ public class OnAdminHandler implements Handler {
   private final TextService textService;
   private final HandlerUtils handlerUtils;
 
-  private AppBot appBot;
+  private BotContainer botContainer;
+
+  @Autowired
+  @Lazy
+  public void setBotContainer(BotContainer botContainer) {
+    this.botContainer = botContainer;
+  }
 
   @Value("${app.bot.adminChatId}")
   private String adminChatId;
 
-  @Autowired
-  @Lazy
-  public void setAppBot(AppBot appBot) {
-    this.appBot = appBot;
-  }
 
   @Override
   public SendMessage handle(Long chatId, Update update) {
@@ -49,7 +50,7 @@ public class OnAdminHandler implements Handler {
     logger.trace("admin handle ({})", chatId);
     stateService.setState(chatId, BotStates.ADMIN_PANEL);
     List<List<Pair<String, String>>> buttons = List.of(
-      List.of(Pair.of(textService.getText("downloadReviewsButton"), "adminButton")),
+      List.of(Pair.of(textService.getText("downloadReviewsButton"), "downloadReviewsButton")),
       List.of(Pair.of(textService.getText("uploadMenuButton"), "uploadMenuButton"))
     );
     InlineKeyboardMarkup inlineKeyboardMarkup = handlerUtils.getButtons(buttons);
@@ -65,7 +66,7 @@ public class OnAdminHandler implements Handler {
     getChatMember.setChatId(adminChatId);
     getChatMember.setUserId(userId);
     try {
-      ChatMember chatMember = appBot.execute(getChatMember);
+      ChatMember chatMember = botContainer.getAppBot().execute(getChatMember);
       String status = chatMember.getStatus();
       logger.trace(status);
       return !(status.equals("left") || status.equals("kicked"));

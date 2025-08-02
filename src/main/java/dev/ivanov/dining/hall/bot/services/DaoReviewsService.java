@@ -1,5 +1,7 @@
 package dev.ivanov.dining.hall.bot.services;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -7,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import dev.ivanov.dining.hall.bot.dto.ReviewsPageDto;
@@ -35,6 +38,7 @@ public class DaoReviewsService implements ReviewService {
     Review entity = Review.builder()
       .text(review)
       .username(username)
+      .date(LocalDateTime.now())
       .build();
     reviewRepository.save(entity);
   }
@@ -50,7 +54,7 @@ public class DaoReviewsService implements ReviewService {
   @Transactional
   public ReviewsPageDto getReviews(Integer page) {
     logger.info("getReviews - page: {}", page);
-    PageRequest pageRequest = PageRequest.of(page, pageSize);
+    PageRequest pageRequest = PageRequest.of(page, pageSize, Sort.by("date").descending());
     Page<Review> reviewsPage = reviewRepository.findAll(pageRequest);
     Integer totalPages = reviewsPage.getTotalPages();
 
@@ -64,7 +68,7 @@ public class DaoReviewsService implements ReviewService {
 
     StringBuilder textBuilder = new StringBuilder();
     textBuilder
-      .append("<b>--" + page + "--</b>\n\n");
+      .append("<b>--" + (page + 1) + "--</b>\n\n");
 
     for (Review review : reviews) {
       textBuilder
@@ -78,6 +82,12 @@ public class DaoReviewsService implements ReviewService {
       .text(textBuilder.toString())
       .totalPages(totalPages)
       .build();
+  }
+
+  @Override
+  public List<Review> getAllReviews() {
+    logger.trace("getAllReviews");
+    return reviewRepository.findAll();
   }
   
 }

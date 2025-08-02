@@ -21,6 +21,8 @@ public class DaoMenuService implements MenuService {
 
   private final MenuRowRepository menuRowRepository;
 
+  private final TextService textService;
+
   @Override
   @Transactional
   public void updateMenu(List<MenuRow> menu) {
@@ -58,6 +60,8 @@ public class DaoMenuService implements MenuService {
         menuRow.getNumber() + ". " + menuRow.getName() + " - " + menuRow.getPrice()
       ).append("\n");
     }
+    if (menuRows.isEmpty()) 
+      menuBuilder.append("\n<b>" + textService.getText("emptyMenu") + "</b>\n");
     return menuBuilder.toString();
   } 
 

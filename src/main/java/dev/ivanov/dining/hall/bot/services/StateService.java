@@ -8,8 +8,4 @@ public interface StateService {
   void setState(Long chatId, BotStates state);
 
   void resetState(Long chatId);
-
-  Integer getReviewPage(Long chatId);
-
-  void setReviewPage(Long chatId, Integer reviewPage);
 }

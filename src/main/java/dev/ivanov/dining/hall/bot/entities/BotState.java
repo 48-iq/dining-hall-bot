@@ -28,6 +28,4 @@ public class BotState {
   @Enumerated(EnumType.STRING)
   private BotStates state;
 
-  private Integer reviewPage;
-
 }

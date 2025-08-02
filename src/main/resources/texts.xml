@@ -20,6 +20,22 @@
 /admin - панель администратора
 </text>
 
+<text key="uploadMenuError">
+Не удалось загрузить меню
+</text>
+
+<text key="newReviewSent">
+Отзыв успешно отправлен
+</text>
+
+<text key="uploadMenuSuccess">
+Меню успешно загружено
+</text>
+
+<text key="newReview">
+Введите отзыв
+</text>
+
 <text key="mainMenu">
 Выберите опцию
 </text>
@@ -33,12 +49,20 @@
   Пустая страница, отзывов нет
 </text>
 
+<text key="downloadReviews">
+Отзывы осталенныые пользователями в формате excel
+</text>
+
 <text key="adminNotAllowed">
 Вы не являетесь администратором
 </text>
 
 <text key="uploadMenu">
 Загрузите файл меню в формате .xlsx
+</text>
+
+<text key="emptyMenu">
+  Пустая страница, меню не загружено
 </text>
 
 <!-- BUTTONS -->
@@ -70,12 +94,12 @@
 Загрузить новое меню
 </text>
 
-<text key="uploadMenuError">
-Не удалось загрузить меню
+<text key="mainMenuButton">
+Вернуться в меню
 </text>
 
-<text key="uploadMenuSuccess">
-Меню успешно загружено
+<text key="newReviewButton">
+Написать отзыв
 </text>
 
 </texts>

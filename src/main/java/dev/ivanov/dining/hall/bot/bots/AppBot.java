@@ -6,13 +6,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import dev.ivanov.dining.hall.bot.handlers.ExternalHandler;
 
-@Component
-public class AppBot extends TelegramLongPollingBot {
+public final class AppBot extends TelegramLongPollingBot {
 
   private Logger logger = LoggerFactory.getLogger(AppBot.class);
 
@@ -28,7 +28,8 @@ public class AppBot extends TelegramLongPollingBot {
     ExecutorService telegramExecutorService,
     ExternalHandler externalHandler
   ) {
-    super(token);
+    super(new DefaultBotOptions(), token);
+    this.onRegister();
     this.telegramExecutorService = telegramExecutorService;
     this.username = username;
     this.externalHandler = externalHandler;

@@ -24,19 +24,31 @@ public class DefaultExternalHandler implements ExternalHandler{
 
   private static final String ADMIN_COMMAND = "/admin";
   
-  private final Handler onStartHandler;
+  private Handler onStartHandler;
   
-  private final Handler onHelpHandler;
+  private Handler onHelpHandler;
   
-  private final Handler onDefaultHandler;
+  private Handler onDefaultHandler;
 
-  private final Handler onMainMenuHandler;
+  private Handler onMainMenuHandler;
   
-  private final Handler onAdminHandler;
+  private Handler onAdminHandler;
 
-  private final Handler onMenuUploadButtonHandler;
+  private Handler onMenuUploadButtonHandler;
 
-  private final Handler onMenuUploadHandler;
+  private Handler onMenuUploadHandler;
+
+  private Handler onReviewsHandler;
+
+  private Handler onTodayMenuButtonHandler;
+
+  private Handler onTomorrowMenuHandler;
+
+  private Handler onNewReviewButtonHandler;
+
+  private Handler onReviewInputHandler;
+
+  private Handler onDownloadReviewsButtonHandler;
 
   public DefaultExternalHandler(
     StateService stateService, 
@@ -46,16 +58,28 @@ public class DefaultExternalHandler implements ExternalHandler{
     @Qualifier("onAdminHandler") Handler onAdminHandler,
     @Qualifier("onUploadMenuHandler") Handler onMenuUploadHandler,
     @Qualifier("onUploadMenuButtonHandler") Handler onMenuUploadButtonHandler,
+    @Qualifier("onReviewsButtonHandler") Handler onReviewsHandler,
+    @Qualifier("onTodayMenuButtonHandler") Handler onTodayMenuButtonHandler,
+    @Qualifier("onTomorrowMenuHandler") Handler onTomorrowMenuHandler,
+    @Qualifier("onNewReviewButtonHandler") Handler onNewReviewButtonHandler,
+    @Qualifier("onDownloadReviewsButtonHandler") Handler onDownloadReviewsButtonHandler,
+    @Qualifier("onReviewInputHandler") Handler onReviewInputHandler,
     @Qualifier("onDefaultHandler") Handler onDefaultHandler) {
     
     this.onMainMenuHandler = onMainMenuHandler;
+    this.onNewReviewButtonHandler = onNewReviewButtonHandler;
+    this.onTodayMenuButtonHandler = onTodayMenuButtonHandler;
+    this.onTomorrowMenuHandler = onTomorrowMenuHandler;
     this.stateService = stateService;
     this.onStartHandler = onStartHandler;
     this.onHelpHandler = onHelpHandler;
     this.onAdminHandler = onAdminHandler;
     this.onMenuUploadButtonHandler = onMenuUploadButtonHandler;
+    this.onDownloadReviewsButtonHandler = onDownloadReviewsButtonHandler;
     this.onMenuUploadHandler = onMenuUploadHandler;
     this.onDefaultHandler = onDefaultHandler;
+    this.onReviewsHandler = onReviewsHandler;
+    this.onReviewInputHandler = onReviewInputHandler;
 
   }
 
@@ -67,8 +91,8 @@ public class DefaultExternalHandler implements ExternalHandler{
       String text = update.getMessage().getText();
 
       //handle inputs
-      if (stateService.getState(chatId).equals(BotStates.USER_CREATE_REVIEW)) {
-        
+      if (stateService.getState(chatId).equals(BotStates.NEW_REVIEW)) {
+        return onReviewInputHandler.handle(chatId, update);
       }
 
       
@@ -90,21 +114,31 @@ public class DefaultExternalHandler implements ExternalHandler{
       String callbackType = update.getCallbackQuery().getData();
       Long chatId = update.getCallbackQuery().getMessage().getChatId();
 
+      if (callbackType.startsWith("rb")) {
+        return onReviewsHandler.handle(chatId, update);
+      }
+
       //handle buttons
       switch (callbackType) {
         case "startButton":
           return onMainMenuHandler.handle(chatId, update);
         case "reviewsButton":
+          return onReviewsHandler.handle(chatId, update);
+        case "mainMenuButton":
+          return onMainMenuHandler.handle(chatId, update); 
         case "todayMenuButton":
+          return onTodayMenuButtonHandler.handle(chatId, update);
         case "tomorrowMenuButton":
-        case "weekMenuButton":
+          return onTomorrowMenuHandler.handle(chatId, update);
         case "newReviewButton":
-        case "sendNewReviewButton":
+          return onNewReviewButtonHandler.handle(chatId, update);
         case "downloadReviewsButton":
+          return onDownloadReviewsButtonHandler.handle(chatId, update);
         case "uploadMenuButton":
           return onMenuUploadButtonHandler.handle(chatId, update);
       }
     } 
+    // handle fiels
     else if (update.hasMessage() && update.getMessage().hasDocument()) {
       Long chatId = update.getMessage().getChatId();
       logger.info("hasDocument, state is {}", stateService.getState(chatId));
@@ -113,7 +147,14 @@ public class DefaultExternalHandler implements ExternalHandler{
         return onMenuUploadHandler.handle(chatId, update);
       }
     }
-    return onDefaultHandler.handle(update.getMessage().getChatId(), update);
+    Long chatId = null;
+    if (update.hasMessage()) {
+      chatId = update.getMessage().getChatId();
+    }
+    else if (update.hasCallbackQuery()) {
+      chatId = update.getCallbackQuery().getMessage().getChatId();
+    }
+    return onDefaultHandler.handle(chatId, update);
     
   }
 

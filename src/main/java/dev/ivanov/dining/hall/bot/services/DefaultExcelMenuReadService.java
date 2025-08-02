@@ -16,8 +16,8 @@ import org.springframework.stereotype.Service;
 import dev.ivanov.dining.hall.bot.entities.MenuRow;
 
 @Service
-public class DefaultXcelMenuReadService implements XcelMenuReadService {
-  private static final Logger logger = LoggerFactory.getLogger(DefaultXcelMenuReadService.class);
+public class DefaultExcelMenuReadService implements ExcelMenuReadService {
+  private static final Logger logger = LoggerFactory.getLogger(DefaultExcelMenuReadService.class);
 
   @Override
   public List<MenuRow> readMenu(InputStream file) {

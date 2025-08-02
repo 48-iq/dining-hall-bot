@@ -11,17 +11,20 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.GetFile;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import dev.ivanov.dining.hall.bot.bots.AppBot;
+import dev.ivanov.dining.hall.bot.bots.BotContainer;
 import dev.ivanov.dining.hall.bot.entities.MenuRow;
 import dev.ivanov.dining.hall.bot.services.MenuService;
 import dev.ivanov.dining.hall.bot.services.TextService;
-import dev.ivanov.dining.hall.bot.services.XcelMenuReadService;
+import dev.ivanov.dining.hall.bot.services.ExcelMenuReadService;
+import dev.ivanov.dining.hall.bot.services.HandlerUtils;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -30,22 +33,25 @@ public class OnUploadMenuHandler implements Handler {
 
   private final static Logger logger = LoggerFactory.getLogger(OnUploadMenuHandler.class);
 
-  private AppBot appBot;
+  
+  private final ExcelMenuReadService xcelMenuReadService;
 
-  private final XcelMenuReadService xcelMenuReadService;
-
+  private final HandlerUtils handlerUtils;
+  
   private final MenuService menuService;
-
+  
   private final TextService textService;
 
-  @Value("${app.bot.token}")
-  private String token;
+  private BotContainer botContainer;
 
   @Autowired
   @Lazy
-  public void setAppBot(AppBot appBot) {
-    this.appBot = appBot;
+  public void setBotContainer(BotContainer botContainer) {
+    this.botContainer = botContainer;
   }
+  
+  @Value("${app.bot.token}")
+  private String token;
 
   @Override
   
@@ -53,17 +59,31 @@ public class OnUploadMenuHandler implements Handler {
     try {
       GetFile getFile = new GetFile();
       getFile.setFileId(update.getMessage().getDocument().getFileId());
-      String filepath = appBot.execute(getFile).getFilePath();
+      String filepath = botContainer.getAppBot().execute(getFile).getFilePath();
       String fileDownloadUrl = "https://api.telegram.org/file/bot" + token + "/" + filepath;
       try (InputStream inputStream = URI.create(fileDownloadUrl).toURL().openStream()) {
         logger.trace("avaible bytes {}", inputStream.available());
         List<MenuRow> menuRows = xcelMenuReadService.readMenu(inputStream);
         menuService.updateMenu(menuRows);
-        return new SendMessage(chatId.toString(), textService.getText("uploadMenuSuccess"));
+        InlineKeyboardMarkup inlineKeyboardMarkup = handlerUtils.getButtons(
+          List.of(
+            List.of(Pair.of(textService.getText("mainMenuButton"), "mainMenuButton"))
+          )
+        );
+        SendMessage sendMessage = new SendMessage(chatId.toString(), textService.getText("uploadMenuSuccess"));
+        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
+        return sendMessage;
       }
       } catch (TelegramApiException|IOException e) {
         logger.error("error processing menu update", e);
-        return new SendMessage(chatId.toString(), textService.getText("uploadMenuError"));
+        InlineKeyboardMarkup inlineKeyboardMarkup = handlerUtils.getButtons(
+          List.of(
+            List.of(Pair.of(textService.getText("mainMenuButton"), "mainMenuButton"))
+          )
+        );
+        SendMessage sendMessage = new SendMessage(chatId.toString(), textService.getText("uploadMenuSuccess"));
+        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
+        return sendMessage;
     }
     
   }

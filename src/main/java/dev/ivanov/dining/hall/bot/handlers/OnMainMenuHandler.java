@@ -27,9 +27,8 @@ public class OnMainMenuHandler implements Handler {
   public SendMessage handle(Long chatId, Update update) {
     logger.trace("main menu handle ({})", chatId);
     List<List<Pair<String,String>> > buttons = List.of(
-      List.of(Pair.of(textService.getText("todayMenuButton"), "dayMenuButton")),
+      List.of(Pair.of(textService.getText("todayMenuButton"), "todayMenuButton")),
       List.of(Pair.of(textService.getText("tomorrowMenuButton"), "tomorrowMenuButton")),
-      List.of(Pair.of(textService.getText("weekMenuButton"), "weekMenuButton")),
       List.of(Pair.of(textService.getText("reviewsButton"), "reviewsButton"))
     );
     InlineKeyboardMarkup inlineKeyboardMarkup = handlerUtils.getButtons(buttons);

@@ -1,6 +1,7 @@
 package dev.ivanov.dining.hall.bot.entities;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,5 +30,5 @@ public class Review {
 
   private String username;
 
-  private LocalDate date;
+  private LocalDateTime date;
 }
