@@ -9,9 +9,8 @@ public enum BotStates {
 
   UPLOAD_MENU,
 
-  USER_WEEK_MENU,
+  WEEK_MENU,
 
-  REVIEWS,
   NEW_REVIEW,
 
   DAY_MENU

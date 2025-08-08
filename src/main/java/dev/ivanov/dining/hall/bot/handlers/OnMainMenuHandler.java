@@ -11,7 +11,9 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 
 import dev.ivanov.dining.hall.bot.services.HandlerUtils;
+import dev.ivanov.dining.hall.bot.services.StateService;
 import dev.ivanov.dining.hall.bot.services.TextService;
+import dev.ivanov.dining.hall.bot.states.BotStates;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -23,13 +25,17 @@ public class OnMainMenuHandler implements Handler {
 
   private final HandlerUtils handlerUtils;
 
+  private final StateService stateService;
+
   @Override
   public SendMessage handle(Long chatId, Update update) {
     logger.trace("main menu handle ({})", chatId);
+    stateService.setState(chatId, BotStates.MAIN_MENU);
     List<List<Pair<String,String>> > buttons = List.of(
       List.of(Pair.of(textService.getText("todayMenuButton"), "todayMenuButton")),
       List.of(Pair.of(textService.getText("tomorrowMenuButton"), "tomorrowMenuButton")),
-      List.of(Pair.of(textService.getText("reviewsButton"), "reviewsButton"))
+      List.of(Pair.of(textService.getText("newReviewButton"), "newReviewButton")),
+      List.of(Pair.of(textService.getText("weekMenuButton"), "weekMenuButton"))
     );
     InlineKeyboardMarkup inlineKeyboardMarkup = handlerUtils.getButtons(buttons);
     SendMessage sendMessage = new SendMessage(chatId.toString(), textService.getText("mainMenu"));

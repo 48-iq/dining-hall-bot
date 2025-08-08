@@ -17,7 +17,7 @@ app:
     token: ${BOT_TOKEN:default}
     username: ${BOT_USERNAME:default}
     threads: ${BOT_THREADS:10}
-    adminChatId: -4892022111
+    adminChatId: ${BOT_ADMIN_CHAT_ID:default}
     reviewsPageSize: 3
 logging:
   level:

@@ -24,6 +24,10 @@
 Не удалось загрузить меню
 </text>
 
+<text key="weekMenu">
+Выберите день
+</text>
+
 <text key="newReviewSent">
 Отзыв успешно отправлен
 </text>
@@ -100,6 +104,10 @@
 
 <text key="newReviewButton">
 Написать отзыв
+</text>
+
+<text key="weekMenuButton">
+Меню текущей недели
 </text>
 
 </texts>

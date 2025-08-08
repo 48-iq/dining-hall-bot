@@ -32,6 +32,14 @@ public class DaoMenuService implements MenuService {
   }
 
   @Override
+  @Transactional
+  public String getMenuByDate(LocalDate date) {
+    logger.trace("getMenuByDate");
+    List<MenuRow> menuRows = menuRowRepository.findByDate(date);
+    return convert(menuRows, getDayRussianName(date.getDayOfWeek()));
+  }
+
+  @Override
   public String getTodayMenu() {
     logger.trace("getTodayMenu");
     LocalDate today = LocalDate.now();
@@ -57,7 +65,7 @@ public class DaoMenuService implements MenuService {
       }
       menuBuilder
       .append(
-        menuRow.getNumber() + ". " + menuRow.getName() + " - " + menuRow.getPrice()
+        menuRow.getName() + " - " + menuRow.getPrice()
       ).append("\n");
     }
     if (menuRows.isEmpty()) 

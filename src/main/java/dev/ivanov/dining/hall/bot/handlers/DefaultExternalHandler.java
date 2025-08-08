@@ -38,8 +38,6 @@ public class DefaultExternalHandler implements ExternalHandler{
 
   private Handler onMenuUploadHandler;
 
-  private Handler onReviewsHandler;
-
   private Handler onTodayMenuButtonHandler;
 
   private Handler onTomorrowMenuHandler;
@@ -50,6 +48,10 @@ public class DefaultExternalHandler implements ExternalHandler{
 
   private Handler onDownloadReviewsButtonHandler;
 
+  private Handler onWeekMenuHandler;
+  
+  private Handler onDayMenuHandler;
+
   public DefaultExternalHandler(
     StateService stateService, 
     @Qualifier("onHelpHandler") Handler onHelpHandler,
@@ -58,15 +60,17 @@ public class DefaultExternalHandler implements ExternalHandler{
     @Qualifier("onAdminHandler") Handler onAdminHandler,
     @Qualifier("onUploadMenuHandler") Handler onMenuUploadHandler,
     @Qualifier("onUploadMenuButtonHandler") Handler onMenuUploadButtonHandler,
-    @Qualifier("onReviewsButtonHandler") Handler onReviewsHandler,
     @Qualifier("onTodayMenuButtonHandler") Handler onTodayMenuButtonHandler,
     @Qualifier("onTomorrowMenuHandler") Handler onTomorrowMenuHandler,
     @Qualifier("onNewReviewButtonHandler") Handler onNewReviewButtonHandler,
     @Qualifier("onDownloadReviewsButtonHandler") Handler onDownloadReviewsButtonHandler,
     @Qualifier("onReviewInputHandler") Handler onReviewInputHandler,
+    @Qualifier("onWeekMenuHandler") Handler onWeekMenuHandler,
+    @Qualifier("onDayMenuHandler") Handler onDayMenuHandler,
     @Qualifier("onDefaultHandler") Handler onDefaultHandler) {
     
     this.onMainMenuHandler = onMainMenuHandler;
+    this.onWeekMenuHandler = onWeekMenuHandler;
     this.onNewReviewButtonHandler = onNewReviewButtonHandler;
     this.onTodayMenuButtonHandler = onTodayMenuButtonHandler;
     this.onTomorrowMenuHandler = onTomorrowMenuHandler;
@@ -78,8 +82,8 @@ public class DefaultExternalHandler implements ExternalHandler{
     this.onDownloadReviewsButtonHandler = onDownloadReviewsButtonHandler;
     this.onMenuUploadHandler = onMenuUploadHandler;
     this.onDefaultHandler = onDefaultHandler;
-    this.onReviewsHandler = onReviewsHandler;
     this.onReviewInputHandler = onReviewInputHandler;
+    this.onDayMenuHandler = onDayMenuHandler;
 
   }
 
@@ -114,16 +118,20 @@ public class DefaultExternalHandler implements ExternalHandler{
       String callbackType = update.getCallbackQuery().getData();
       Long chatId = update.getCallbackQuery().getMessage().getChatId();
 
-      if (callbackType.startsWith("rb")) {
-        return onReviewsHandler.handle(chatId, update);
+      // if (callbackType.startsWith("rb")) {
+      //   return onReviewsHandler.handle(chatId, update);
+      // }
+
+      if (callbackType.startsWith("wd:")) {
+        return onDayMenuHandler.handle(chatId, update);
       }
 
       //handle buttons
       switch (callbackType) {
         case "startButton":
           return onMainMenuHandler.handle(chatId, update);
-        case "reviewsButton":
-          return onReviewsHandler.handle(chatId, update);
+        // case "reviewsButton":
+        //   return onReviewsHandler.handle(chatId, update);
         case "mainMenuButton":
           return onMainMenuHandler.handle(chatId, update); 
         case "todayMenuButton":
@@ -136,6 +144,8 @@ public class DefaultExternalHandler implements ExternalHandler{
           return onDownloadReviewsButtonHandler.handle(chatId, update);
         case "uploadMenuButton":
           return onMenuUploadButtonHandler.handle(chatId, update);
+        case "weekMenuButton":
+          return onWeekMenuHandler.handle(chatId, update);
       }
     } 
     // handle fiels
